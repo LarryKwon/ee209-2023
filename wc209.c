@@ -227,7 +227,7 @@ int main()
     wordCount wc;
     wc.nc = 0;
     wc.nw = 0;
-    wc.nl = 1;
+    wc.nl = 0;
     wc.comment_line = 0;
     wc.state = Out;
     char c;
