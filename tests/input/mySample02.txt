@@ -241,6 +241,20 @@ wordCount pre_out(const wordCount *ptr, char c)
     return temp;
 }
 
+//***asdfalkjasdfasdf*/asdfasdfasdf   
+/**
+ * asdlkfajdsasf
+*///asdlfakdsjfasf
+//asdlfkajdf
+__DBL_DECIMAL_DIG__//adlfkasdjfa
+asdlkfjasdf/*adlfakdjfads//asdfasd
+*/
+asdflaksdjf/*asdfasdf//asdfadsf*/
+/*asdfadf//asdfldk    */
+/*adfadfas//asdfasdf//a/**/*/
+adsf,adsfaf //asdflkasdf
+asdfasf
+
 int main()
 {
     wordCount wc;
