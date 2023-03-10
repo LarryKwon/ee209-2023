@@ -2,17 +2,28 @@
 #include <ctype.h>
 #include <stdlib.h>
 
+/**
+ * DFA State Enum
+*/
 enum DFAState
 {
-    Out,
-    In,
-    PreComment_In,
-    PreComment_Out,
-    Comment,
-    C99_Comment,
-    PreOut
+    Out, // Out : it means outside words
+    In, // In : it means inside words
+    PreComment_In, // PreComment_In: when  user types '/' from the state 'In'
+    PreComment_Out, // PreComment_Out: when user types '/' from the state 'Out'
+    Comment, // when user types '*' from the state PreComment_In and PreComment_Out
+    C99_Comment, // when user type one more '/' from the state PreComment_In and PreComment_Out
+    PreOut // when user type '*' from the state Comment
 };
 
+/**
+ * types of wordCount, which contains below
+ * nw: number of word
+ * nc: number of character
+ * nl: number of line
+ * state: state
+ * comment_line: where the comment line starts
+*/
 typedef struct _wordCount
 {
     int nw;
@@ -22,6 +33,9 @@ typedef struct _wordCount
     int comment_line;
 } wordCount;
 
+/**
+ * like constructor, set the values in wordCount
+*/
 void constructor(int nw, int nc, int nl, enum DFAState state, int comment_line, wordCount *ptr)
 {
     ptr->nc = nc;
@@ -30,7 +44,13 @@ void constructor(int nw, int nc, int nl, enum DFAState state, int comment_line, 
     ptr->state = state;
     ptr->comment_line = comment_line;
 }
-
+/**
+ * out state
+ * when the input is Space, remain out state
+ * else it can go to PreComment_out or In state whether the character is '/' or not
+ * when the input is '/' it goes PreComment_Out state
+ * else it goes In state
+*/
 wordCount out(const wordCount *ptr, char c)
 {
     wordCount temp;
@@ -64,6 +84,13 @@ wordCount out(const wordCount *ptr, char c)
     return temp;
 }
 
+/**
+ * In state
+ * when the input is Space, go to out state
+ * else it can go to PreComment_In or remains in In state whether input is '/' or not
+ * if the input is '/', it should go PreComment_In because it means that if the next character is '/' or '*', it should go Comment or C99_Comment
+ * else it remains in In state
+*/
 wordCount in(const wordCount *ptr, char c)
 {
     wordCount temp;
@@ -94,6 +121,15 @@ wordCount in(const wordCount *ptr, char c)
     }
     return temp;
 }
+
+/**
+ * PreComment_In
+ * when the input is space it should go Out state
+ * else it should go to Comment, C99_Comment or In 
+ * if the input is '*', it should go into Comment state
+ * if the input is '/', it should go into C99_Comment state because it means '//' is entered
+ * if the input is other character, it should go into In state because it means the inputs are just like '/a' 
+*/
 
 wordCount precomment_in(const wordCount *ptr, char c)
 {
@@ -131,6 +167,20 @@ wordCount precomment_in(const wordCount *ptr, char c)
     }
     return temp;
 }
+
+/**
+ * PreComment_Out
+ * it is almost same with PreComment_In, but the only difference is that the start point.
+ * PreComment_In is from In state and PreComment_Out is from Out State
+ * when the start point is Out state when the input character is not space which is not '/' or '*', it means the new word starts
+ * But when the start point is In state, there's no need to consider above conditions because a word already starts
+ * 
+ * when the input is space it should go Out state
+ * else it should go to Comment, C99_Comment or In 
+ * if the input is '*', it should go into Comment state
+ * if the input is '/', it should go into C99_Comment state because it means '//' is entered
+ * if the input is other character, it should go into In state because it means the inputs are just like '/a' 
+*/
 
 wordCount precomment_out(const wordCount *ptr, char c)
 {
@@ -174,6 +224,12 @@ wordCount precomment_out(const wordCount *ptr, char c)
     return temp;
 }
 
+/**
+ * C99_Comment
+ * C99_Comment is the comment starts with '//' and end with '\n'
+ * therefore, when the input is '\n' it should go Out state
+ * any other characters comes, the state remains as same
+*/
 wordCount c99_comment(const wordCount *ptr, char c){
     wordCount temp;
     wordCount *ptr_temp;
@@ -192,6 +248,12 @@ wordCount c99_comment(const wordCount *ptr, char c){
 
 }
 
+/**
+ * Comment
+ * when the input is '*', is should go to PreOut state
+ * else the state remains as same
+ */
+ 
 wordCount comment(const wordCount *ptr, char c)
 {
     wordCount temp;
@@ -214,6 +276,12 @@ wordCount comment(const wordCount *ptr, char c)
     return temp;
 }
 
+/**
+ * Pre_Out is the state that the comment already starts and the '*' comes
+ * Therefore the input is '/', it should go to Out state
+ * when the '*' comes, the the state remains
+ * or it should remains in Comment
+*/
 wordCount pre_out(const wordCount *ptr, char c)
 {
     wordCount temp;
@@ -240,6 +308,10 @@ wordCount pre_out(const wordCount *ptr, char c)
     }
     return temp;
 }
+
+/**
+ * main switch case, to controll state
+*/
 
 int main()
 {

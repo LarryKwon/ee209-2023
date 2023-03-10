@@ -126,7 +126,7 @@ wordCount in(const wordCount *ptr, char c)
  * PreComment_In
  * when the input is space it should go Out state
  * else it should go to Comment, C99_Comment or In 
- * if the input is '*', it should go into Comment state because it means '/*' is entered
+ * if the input is '*', it should go into Comment state
  * if the input is '/', it should go into C99_Comment state because it means '//' is entered
  * if the input is other character, it should go into In state because it means the inputs are just like '/a' 
 */
@@ -177,7 +177,7 @@ wordCount precomment_in(const wordCount *ptr, char c)
  * 
  * when the input is space it should go Out state
  * else it should go to Comment, C99_Comment or In 
- * if the input is '*', it should go into Comment state because it means '/*' is entered
+ * if the input is '*', it should go into Comment state
  * if the input is '/', it should go into C99_Comment state because it means '//' is entered
  * if the input is other character, it should go into In state because it means the inputs are just like '/a' 
 */
@@ -250,9 +250,7 @@ wordCount c99_comment(const wordCount *ptr, char c){
 
 /**
  * Comment
- * Comment is the comment starts with '/*' and end with '*/
- /*
- * therefore, when the input is '*', is should go to PreOut state
+ * when the input is '*', is should go to PreOut state
  * else the state remains as same
  */
  
